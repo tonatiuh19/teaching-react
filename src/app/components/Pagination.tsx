@@ -7,6 +7,7 @@ interface PaginationProps {
   totalPages: number; // The total number of pages
   totalCount: number; // The total number of items
   onPageChange: (page: number) => void; // Callback when the page changes
+  siblingCount?: number; // Optional number of sibling pages to show around the current page
 }
 
 // Define and export the Pagination component
@@ -15,7 +16,8 @@ export default function Pagination({
   totalPages, // Destructure totalPages from props
   totalCount, // Destructure totalCount from props
   onPageChange, // Destructure onPageChange from props
-}: PaginationProps) {
+}: //siblingCount = 1, // Optional prop for sibling count, default is 1
+PaginationProps) {
   // Helper function to generate an array of page numbers
   const getPageNumbers = () => {
     const pages = []; // Initialize an empty array for page numbers
@@ -25,6 +27,39 @@ export default function Pagination({
     }
     return pages; // Return the array of page numbers
   };
+
+  // Alternative implementation with sibling count (commented out)
+  /*const getPageNumbers = () => {
+    const pages = []; // Initialize an empty array to hold page numbers and ellipsis.
+    const startPage = Math.max(1, currentPage - siblingCount); // Calculate the first page number to display, ensuring it doesn't go below 1.
+    const endPage = Math.min(totalPages, currentPage + siblingCount); // Calculate the last page number to display, ensuring it doesn't exceed totalPages.
+
+    // Loop from startPage to endPage, adding each page number to the pages array.
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    // If the startPage is greater than 1, we may need to add the first page and an ellipsis.
+    if (startPage > 1) {
+      // If there's a gap of more than one page between 1 and startPage, add an ellipsis.
+      if (startPage > 2) pages.unshift("...");
+
+      // Always add the first page at the beginning.
+      pages.unshift(1);
+    }
+
+    // If the endPage is less than the last page, we may need to add an ellipsis and the last page.
+    if (endPage < totalPages) {
+      // If there's a gap of more than one page between endPage and totalPages, add an ellipsis.
+      if (endPage < totalPages - 1) pages.push("...");
+
+      // Always add the last page at the end.
+      pages.push(totalPages);
+    }
+
+    // Return the final array of page numbers and ellipsis.
+    return pages;
+};*/
 
   // Render the pagination navigation
   return (
@@ -67,7 +102,10 @@ export default function Pagination({
             cursor: "pointer", // Cursor style
             outline: page === currentPage ? "2px solid #00f" : "none", // Outline if current page
           }}
-          onClick={() => onPageChange(page)} // Change to selected page
+          onClick={() => {
+            //return onPageChange(Number(page)); // Call onPageChange with the selected page
+            return onPageChange(page);
+          }} // Change to selected page
         >
           {page} {/* Display page number */}
         </button>
